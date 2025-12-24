@@ -92,8 +92,10 @@ function Header({ title, image, description }) {
             mt={2}
             pt={{ xs: 10, md: 2 }}
             borderRadius="xl"
+            
             // overflow="hidden"
             sx={{
+                boxShadow: "0 15px 20px -10px rgba(0,0,0,.55)",
             // Nâng lớp + hairline giống card
                 // boxShadow:
                 // "inset 0 0 0 1px rgba(255,255,255,.12), 0 12px 32px rgba(0,0,0,.35)",
@@ -104,7 +106,7 @@ function Header({ title, image, description }) {
                 
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                filter: "drop-shadow(0 12px 28px rgba(0,0,0,.5))",   // bóng ngoài
+                // filter: "drop-shadow(0 12px 28px rgba(0,0,0,.5))",   // bóng ngoài
                 
                 // Overlay tách chữ khỏi ảnh (đặt bằng pseudo thay vì lồng vào background)
                 // "&::after": {
