@@ -61,6 +61,7 @@ const pageRoutes = [
         { key: "malware-development", name: "Malware Development", route: "/category/malware-development" },
         { key: "web-security", name: "Web Security", route: "/category/web-security" },
         { key: "threat-intel", name: "Threat Intelligence", route: "/category/threat-intelligence" },
+        { key: "assignment", name: "Asssignment", route: "/category/assignment" },
         ],
     },
     //CTF & Labs

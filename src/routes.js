@@ -168,19 +168,19 @@ const routes = [
         collapse: [
             {
                 name: "Assignment 1",
-                key: "Asssignment 1",
+                key: "1",
                 route: "/assignment/1",
                 component: <Assignment1/>,
             },
             {
                 name: "Assignment 2",
-                key: "Assignment 2",
+                key: "2",
                 route: "/assignment/2",
                 component: <Assignment2/>,
             },
             {
                 name: "Assignment 3",
-                key: "Assignment 3",
+                key: "3",
                 route: "/assignment/3",
                 component: <Assignment3/>,
             },
