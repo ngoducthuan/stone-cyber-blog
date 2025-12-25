@@ -8,7 +8,7 @@ function BlogHeading({ children, level = 4 }) {
 
     const variant = `h${level}`; 
     const fontSizeMap = {
-        1: "2.5rem",
+        1: "2.25rem",
         2: "2rem",
         3: "1.75rem",
         4: "1.5rem",
@@ -23,11 +23,11 @@ function BlogHeading({ children, level = 4 }) {
         sx={{
             // color: "#273239", //Light mode
             // color: "#FEFFFF",
-            color: isDark ? "#FEFFFF" : "#273239",
+            color: isDark ? "#cac6c6" : "#273239",
             fontSize: fontSizeMap[level] || "1.5rem",
             lineHeight: 1.4,
             fontFamily: "Signika, sans-serif",
-            mt: 4,
+            mt: 2.5,
             mb: 2,
         }}
         >

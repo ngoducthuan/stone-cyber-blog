@@ -10,7 +10,7 @@ function BlogHeader({ title, date, author }) {
   const isDark = theme.palette.mode === "dark";
 
   // Màu cho tiêu đề
-  const titleColor = isDark ? "#FEFFFF" : "#273239";
+  const titleColor = isDark ? "#f6f6f6" : "#273239";
 
   // Màu “subtle” cho meta (ngày/author + icon)
   const metaColor = isDark

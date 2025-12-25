@@ -5,7 +5,7 @@ import SoftTypography from "components/SoftTypography";
 import PropTypes from "prop-types";
 import blogData from "layouts/blogCategory/data/blogData";
 import { Card, Grid } from "@mui/material";
-import BlogHeading from "layouts/blog/components/blogHeading/BlogHeading";
+import BlogHeading from "layouts/blog/components/blogHeading";
 import BlogCard from "layouts/blogCategory/components/BlogCard";
 
 function NewestBlogs(){

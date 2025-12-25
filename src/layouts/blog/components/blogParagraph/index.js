@@ -13,7 +13,7 @@ function BlogParagraph({ children }) {
       sx={{
         // color: "#273239", //Light mode
         // color: "#FEFFFF",
-        color: isDark ? "#FEFFFF" : "#273239",
+        color: isDark ? "#B4AFB6" : "#273239",
         fontSize: "1rem",
         lineHeight: 1.6,
         fontFamily: "Heebo, sans-serif",

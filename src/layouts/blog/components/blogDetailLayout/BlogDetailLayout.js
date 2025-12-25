@@ -60,6 +60,9 @@ function BlogLayout({ title, date, author, image, description, children }) {
                         title={title}
                         image={image}
                         description={description}
+                        sx = {{
+                            color: "#f6f6f6",
+                        }}
                     />
                 </SoftBox>
                 <SoftBox pt={3} className="blogDetail">

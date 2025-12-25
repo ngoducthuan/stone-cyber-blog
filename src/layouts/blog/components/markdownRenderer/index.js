@@ -3,6 +3,8 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
+import BlogHeading from "layouts/blog/components/blogHeading";
+import BlogParagraph from "layouts/blog/components/blogParagraph";
 
 // Nếu bạn muốn dùng CodeBlock component sẵn có của bạn:
 import CodeBlock from "layouts/blog/components/codeBlock"; // chỉnh path nếu khác
@@ -14,26 +16,11 @@ export default function MarkdownRenderer({ content }) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
         components={{
-          h1: ({ children }) => (
-            <Typography variant="h3" fontWeight={800} gutterBottom>
-              {children}
-            </Typography>
-          ),
-          h2: ({ children }) => (
-            <Typography variant="h4" fontWeight={700} mt={3} gutterBottom>
-              {children}
-            </Typography>
-          ),
-          h3: ({ children }) => (
-            <Typography variant="h5" fontWeight={700} mt={2} gutterBottom>
-              {children}
-            </Typography>
-          ),
-          p: ({ children }) => (
-            <Typography paragraph sx={{ fontSize: 16, lineHeight: 1.85 }}>
-              {children}
-            </Typography>
-          ),
+          h1: ({ children }) => <BlogHeading level={1}>{children}</BlogHeading>,
+          h2: ({ children }) => <BlogHeading level={2}>{children}</BlogHeading>,
+          h3: ({ children }) => <BlogHeading level={3}>{children}</BlogHeading>,
+          h4: ({ children }) => <BlogHeading level={4}>{children}</BlogHeading>,
+          p: ({ children }) => <BlogParagraph>{children}</BlogParagraph>,
 
           // List
           ul: ({ children }) => (

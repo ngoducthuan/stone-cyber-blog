@@ -142,6 +142,7 @@ export default function TableOfContents({
           letterSpacing: 0.6,
           opacity: 0.9,
           color: theme.palette.text.secondary, // tự đổi theo mode
+          // color: isDark ? "#cac6c6" : "#273239",
           fontSize: "0.9rem",
           textTransform: "none",
           fontWeight: 700,
@@ -162,6 +163,7 @@ export default function TableOfContents({
               sx={(theme) => {
                 const isDark = theme.palette.mode === "dark";
                 const base = isDark ? theme.palette.common.white : theme.palette.common.black;
+                // const base = isDark ? "#cac6c6" : "#273239";
 
                 return {
                   pl: 2 + indent,
@@ -191,14 +193,15 @@ export default function TableOfContents({
               <ListItemText
                 primary={it.text}
                 primaryTypographyProps={{
-                  sx: {
+                  sx: (theme) => ({
                     fontSize: "0.9rem",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
+                    color: theme.palette.mode === "dark" ? "#cac6c6" : "#273239", // ✅ OK
                     fontWeight: it.id === activeId ? 600 : 400,
                     opacity: 0.92,
-                  },
+                  }),
                 }}
               />
             </ListItemButton>

@@ -4,8 +4,8 @@ import SoftBox from "components/SoftBox";
 import ddosImg from "assets/images/blog/DDoS.jpg";
 
 // Blog components
-import BlogHeading from "layouts/blog/components/blogHeading/BlogHeading";
-import BlogParagraph from "layouts/blog/components/blogParagraph/BlogParagraph";
+import BlogHeading from "layouts/blog/components/blogHeading";
+import BlogParagraph from "layouts/blog/components/blogParagraph";
 import BlogDetailRederer from "layouts/blog/components/blogDetailRenderer";
 
 function BlogDetailDDoS() {

@@ -22,12 +22,13 @@ Coded by www.creative-tim.com
 const colors = {
     background: {
         default: "#121416",
+        // default: "#1c1c1c",
     },
 
 
     text: {
         main: "#B3B9C5",
-        focus: "#ffffff",
+        focus: "#fffff",
     },
 
     transparent: {
