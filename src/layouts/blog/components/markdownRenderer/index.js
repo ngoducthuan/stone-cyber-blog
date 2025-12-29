@@ -3,11 +3,10 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
+
 import BlogHeading from "layouts/blog/components/blogHeading";
 import BlogParagraph from "layouts/blog/components/blogParagraph";
-
-// Nếu bạn muốn dùng CodeBlock component sẵn có của bạn:
-import CodeBlock from "layouts/blog/components/codeBlock"; // chỉnh path nếu khác
+import CodeBlock from "layouts/blog/components/codeBlock";
 
 export default function MarkdownRenderer({ content }) {
   return (
@@ -15,14 +14,40 @@ export default function MarkdownRenderer({ content }) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
+
+        /* Chuẩn hoá URL ảnh */
+        urlTransform={(url) => {
+          const raw = String(url || "").trim();
+
+          // Giữ nguyên link http / https / data:
+          if (/^(https?:)?\/\//i.test(raw) || raw.startsWith("data:")) {
+            return raw;
+          }
+
+          // Bỏ "public/" nếu lỡ viết
+          let cleaned = raw.replace(/^public\//, "");
+
+          // Đảm bảo có dấu /
+          if (!cleaned.startsWith("/")) {
+            cleaned = `/${cleaned}`;
+          }
+
+          // Prefix theo PUBLIC_URL (fix GitHub Pages + base path)
+          const base = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+          return `${base}${cleaned}`;
+        }}
+
         components={{
+          /* ===== Headings ===== */
           h1: ({ children }) => <BlogHeading level={1}>{children}</BlogHeading>,
           h2: ({ children }) => <BlogHeading level={2}>{children}</BlogHeading>,
           h3: ({ children }) => <BlogHeading level={3}>{children}</BlogHeading>,
           h4: ({ children }) => <BlogHeading level={4}>{children}</BlogHeading>,
+
+          /* ===== Paragraph ===== */
           p: ({ children }) => <BlogParagraph>{children}</BlogParagraph>,
 
-          // List
+          /* ===== Lists ===== */
           ul: ({ children }) => (
             <Box component="ul" sx={{ pl: 3, mb: 2 }}>
               {children}
@@ -41,8 +66,8 @@ export default function MarkdownRenderer({ content }) {
             </li>
           ),
 
-          // Ảnh
-          img: ({ alt, ...props }) => (
+          /* ===== Images (caption = alt) ===== */
+          img: ({ alt, src, ...props }) => (
             <Box
               sx={{
                 my: 2,
@@ -53,22 +78,22 @@ export default function MarkdownRenderer({ content }) {
             >
               <Box
                 component="img"
-                {...props}
+                src={src}
                 alt={alt || ""}
+                {...props}
                 sx={{
                   width: "100%",
-                  maxWidth: 900,   // chỉnh tùy ý
+                  maxWidth: 900,
                   height: "auto",
                   borderRadius: 2,
                   display: "block",
                 }}
               />
-
               {alt ? (
                 <Typography
                   variant="caption"
                   color="text.secondary"
-                  textAlign="center"   // 👈 caption căn giữa
+                  textAlign="center"
                   mt={1}
                 >
                   {alt}
@@ -77,32 +102,32 @@ export default function MarkdownRenderer({ content }) {
             </Box>
           ),
 
-          // Code inline + code block
+          /* ===== Code ===== */
           code: ({ inline, className, children }) => {
-          if (inline) {
-            return (
-              <Box
-                component="code"
-                sx={{
-                  px: 0.6,
-                  py: 0.1,
-                  borderRadius: 1,
-                  bgcolor: "action.hover",
-                  fontFamily: "monospace",
-                  fontSize: "0.9em",
-                }}
-              >
-                {children}
-              </Box>
-            );
-          }
+            if (inline) {
+              return (
+                <Box
+                  component="code"
+                  sx={{
+                    px: 0.6,
+                    py: 0.1,
+                    borderRadius: 1,
+                    bgcolor: "action.hover",
+                    fontFamily: "monospace",
+                    fontSize: "0.9em",
+                  }}
+                >
+                  {children}
+                </Box>
+              );
+            }
 
-          const lang = (className || "").replace("hljs language-", "") || "bash";
-          const codeString = String(children ?? "").replace(/\n$/, "");
+            const lang =
+              (className || "").replace("hljs language-", "") || "bash";
+            const codeString = String(children ?? "").replace(/\n$/, "");
 
-          return <CodeBlock lang={lang}>{codeString}</CodeBlock>;
-        },
-
+            return <CodeBlock lang={lang}>{codeString}</CodeBlock>;
+          },
         }}
       >
         {content}

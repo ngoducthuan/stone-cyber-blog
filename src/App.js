@@ -71,6 +71,9 @@ import "@fontsource/signika/400.css"; // Regular
 import "@fontsource/signika/600.css"; // Semi-bold
 import "@fontsource/signika/700.css"; // Bold
 
+//Routing
+import NotFoundRedirect from "components/Routing";
+
 export default function App() {
     const [controller, dispatch] = useSoftUIController();
     const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
@@ -256,7 +259,8 @@ export default function App() {
             <Routes>
                 {getRoutes(routes)} 
                 {getRoutes(blogRoutes)}
-                <Route path="*" element={<Navigate to="/categories" />} />
+                {/* <Route path="*" element={<Navigate to="/categories" />} /> */}
+                <Route path="*" element={<NotFoundRedirect />} />
             </Routes>
             {/* Footer */}
             {/* <SoftBox width="100%">
