@@ -57,8 +57,6 @@ import Card from "@mui/material/Card";
 import { Link } from "react-router-dom";
 import CardMedia from "@mui/material/CardMedia";
 
-import image from "assets/images/blog/category.jpg"
-
 import imageSysSec from "assets/images/blog/system-security.jpg";
 import imageNetSec from "assets/images/blog/network-security.jpg";
 import imageMalDev from "assets/images/blog/malware.jpg"
@@ -66,7 +64,10 @@ import imageMalDev from "assets/images/blog/malware.jpg"
 import SoftButton from "components/SoftButton";
 
 //Import data
-import categoryData from "layouts/blogCategory/data/categoryData";
+import { blogMap } from "routes/blogMap";
+import { buildCategoryCardsFromBlogMap } from "routes/blog.builders";
+
+const categories = buildCategoryCardsFromBlogMap(blogMap);
 
 function AllCategories() {
     // ComplexProjectCard dropdown menu state
@@ -90,7 +91,7 @@ function AllCategories() {
 
     const [page, setPage] = useState(1);
     const totalPages = 10;
-
+    
     // Dropdown menu template for the ComplexProjectCard
     const renderMenu = (state, close) => (
         <Menu
@@ -112,13 +113,13 @@ function AllCategories() {
             <SoftBox maxWidth="1300px" mx="auto" mt={{ xs: 1, lg: 3 }} mb={1} px={2}>
                 <Header 
                     title="All Categories"
-                    image={image}
+                    image={"/images/category.jpg"}
                     description="Explore all categories and discover content tailored to your interests."
                 />
                 <SoftBox pt={5} pb={2} >
                     <SoftBox mt={{ xs: 1, lg: 3 }} mb={1} >
                         <Grid container spacing={3}>
-                            {Object.values(categoryData).map((cat) => (
+                            {categories.map((cat) => (
                                 <Grid item
                                     xs={12}      // mobile: 1
                                     sm={6}       // >=600: 2
@@ -137,7 +138,6 @@ function AllCategories() {
                                 />
                                 </Grid>
                             ))}
-                           
                         </Grid>
                     </SoftBox>
                 </SoftBox>

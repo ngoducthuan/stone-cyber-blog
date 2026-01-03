@@ -47,7 +47,7 @@ import createCache from "@emotion/cache";
 
 // Soft UI Dashboard PRO React routes
 import routes from "routes";
-import blogRoutes from "blog.routes";
+import hiddenRoutes from "hidden.routes";
 
 import pageRoutes from "page.routes";
 
@@ -137,17 +137,24 @@ export default function App() {
     // }, []);
 
     const getRoutes = (allRoutes) =>
-        allRoutes.map((route) => {
+    allRoutes.flatMap((route) => {
         if (route.collapse) {
             return getRoutes(route.collapse);
         }
 
         if (route.route) {
-            return <Route exact path={route.route} element={route.component} key={route.key} />;
+        return [
+            <Route
+            path={route.route}
+            element={route.component}
+            key={route.key}
+            />,
+        ];
         }
 
-        return null;
-        });
+        return [];
+    });
+
 
     const configsButton = (
         <SoftBox
@@ -258,7 +265,7 @@ export default function App() {
             {/* {layout === "vr" && <Configurator />} */}
             <Routes>
                 {getRoutes(routes)} 
-                {getRoutes(blogRoutes)}
+                {getRoutes(hiddenRoutes)}
                 {/* <Route path="*" element={<Navigate to="/categories" />} /> */}
                 <Route path="*" element={<NotFoundRedirect />} />
             </Routes>

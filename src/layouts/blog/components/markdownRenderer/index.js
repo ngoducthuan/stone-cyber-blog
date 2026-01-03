@@ -1,3 +1,4 @@
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -8,35 +9,42 @@ import BlogHeading from "layouts/blog/components/blogHeading";
 import BlogParagraph from "layouts/blog/components/blogParagraph";
 import CodeBlock from "layouts/blog/components/codeBlock";
 
+/**
+ * Convert React children tree (string | array | React elements) -> plain text
+ * Needed because rehype-highlight turns code into <span>...</span> nodes
+ */
+const toText = (node) => {
+  if (node == null) return "";
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(toText).join("");
+  // React element object
+  if (typeof node === "object" && node.props) return toText(node.props.children);
+  return "";
+};
+
 export default function MarkdownRenderer({ content }) {
   return (
     <Box>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
-
-        /* Chuẩn hoá URL ảnh */
+        // Chuẩn hoá URL ảnh (fix GitHub Pages + base path)
         urlTransform={(url) => {
           const raw = String(url || "").trim();
 
           // Giữ nguyên link http / https / data:
-          if (/^(https?:)?\/\//i.test(raw) || raw.startsWith("data:")) {
-            return raw;
-          }
+          if (/^(https?:)?\/\//i.test(raw) || raw.startsWith("data:")) return raw;
 
           // Bỏ "public/" nếu lỡ viết
           let cleaned = raw.replace(/^public\//, "");
 
           // Đảm bảo có dấu /
-          if (!cleaned.startsWith("/")) {
-            cleaned = `/${cleaned}`;
-          }
+          if (!cleaned.startsWith("/")) cleaned = `/${cleaned}`;
 
-          // Prefix theo PUBLIC_URL (fix GitHub Pages + base path)
           const base = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
           return `${base}${cleaned}`;
         }}
-
         components={{
           /* ===== Headings ===== */
           h1: ({ children }) => <BlogHeading level={1}>{children}</BlogHeading>,
@@ -90,12 +98,7 @@ export default function MarkdownRenderer({ content }) {
                 }}
               />
               {alt ? (
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  textAlign="center"
-                  mt={1}
-                >
+                <Typography variant="caption" color="text.secondary" textAlign="center" mt={1}>
                   {alt}
                 </Typography>
               ) : null}
@@ -104,6 +107,7 @@ export default function MarkdownRenderer({ content }) {
 
           /* ===== Code ===== */
           code: ({ inline, className, children }) => {
+            // Inline code
             if (inline) {
               return (
                 <Box
@@ -122,9 +126,15 @@ export default function MarkdownRenderer({ content }) {
               );
             }
 
+            // Block code
             const lang =
-              (className || "").replace("hljs language-", "") || "bash";
-            const codeString = String(children ?? "").replace(/\n$/, "");
+              (className || "")
+                .replace("hljs", "")
+                .replace("language-", "")
+                .trim() || "bash";
+
+            // IMPORTANT: rehype-highlight turns code into elements => must toText()
+            const codeString = toText(children).replace(/\n$/, "");
 
             return <CodeBlock lang={lang}>{codeString}</CodeBlock>;
           },

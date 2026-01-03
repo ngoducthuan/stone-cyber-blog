@@ -68,8 +68,12 @@ import { useParams } from "react-router-dom";
 import BlogFooter from "examples/BlogFooter";
 import SitePagination from "examples/Pagination/SitePagination";
 //Import category data
-import categoryData from "layouts/blogCategory/data/categoryData";
-import blogData from "layouts/blogCategory/data/blogData";
+// import categoryData from "layouts/blogCategory/data/categoryData";
+// import blogData from "layouts/blogCategory/data/blogData";
+import { blogMap } from "routes/blogMap";
+import { buildPostsFromBlogMap, buildCategoryCardsFromBlogMap } from "routes/blog.builders";
+import { Hearing } from "@mui/icons-material";
+
 
 function CategoryDetails() {
     // ComplexProjectCard dropdown menu state
@@ -110,24 +114,32 @@ function CategoryDetails() {
         </Menu>
     );
 
+    const categoryData = buildCategoryCardsFromBlogMap(blogMap);
+    const blogData = buildPostsFromBlogMap(blogMap);
     const { categoryType } = useParams(); //Get date from url http://localhost:3000/category/malware => // type === "malware"
     const location = useLocation();
 
     //Fallback if useParams don't hvae categoryType
     const finalCategoryType = categoryType || location.pathname.split("/")[2];
 
-    const category = categoryData[finalCategoryType];
+    const category = categoryData.find((c) => c.id === finalCategoryType);
     if(!category){
         return <Navigate to="/authentication/error/404" />
     }
     const blogsCard = blogData.filter((b) => b.category === finalCategoryType);
+    
+    const base = process.env.PUBLIC_URL || "";
+    const headerImage =
+    base && category.image?.startsWith(base)
+        ? category.image.slice(base.length)
+        : category.image; //Remove default url only pass /images/<>.png => avoid error
 
     return (
         <DashboardLayout>
             <SoftBox maxWidth="1300px" mx="auto" mt={{ xs: 1, lg: 3 }} mb={1} px={2}>
                 <Header 
                     title = {category.title}
-                    image = {category.image}
+                    image = {headerImage}
                     description= {category.description}
                 />
                 <SoftBox pt={5} pb={2}>
@@ -136,10 +148,10 @@ function CategoryDetails() {
                             {blogsCard.map((blog) => (
                                 <Grid item key={blog.id} xs={12} sm={6} md={4} lg={3}>
                                     <BlogCard
-                                        image={blog.image}
-                                        title={blog.title}
-                                        description={blog.description}
-                                        link={blog.link}
+                                    image={blog.image}
+                                    title={blog.title}
+                                    description={blog.description}
+                                    link={{ pathname: blog.link }}
                                     />
                                 </Grid>
                             ))}

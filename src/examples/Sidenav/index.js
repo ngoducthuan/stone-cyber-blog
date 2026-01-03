@@ -57,6 +57,13 @@ function Sidenav({ color = "info", brand = "", brandName, routes, ...rest }) {
     const { pathname } = location;
     const collapseName = pathname.split("/").slice(1)[0];
     const itemName = pathname.split("/").slice(1)[1];
+    const isAnyChildActive = (items = []) =>
+        items.some((it) => {
+            if (it.href || !it.route) return false;
+            if (it.collapse) return isAnyChildActive(it.collapse);
+            return !!matchPath({ path: it.route, end: true }, pathname);
+        });
+
 
     //Search
     const [searchOpen, setSearchOpen] = useState(false);
@@ -160,9 +167,13 @@ function Sidenav({ color = "info", brand = "", brandName, routes, ...rest }) {
                 rel="noreferrer"
                 sx={{ textDecoration: "none" }}
             >
-                <SidenavItem 
+                {/* <SidenavItem 
                     name={name} 
                     active={key === itemName} 
+                /> */}
+                <SidenavItem
+                    name={name}
+                    active={!!matchPath({ path: route, end: true }, pathname)}   
                 />
             </Link>
             ) : (
@@ -170,7 +181,8 @@ function Sidenav({ color = "info", brand = "", brandName, routes, ...rest }) {
                 <NavLink to={route} key={key} sx={{ textDecoration: "none" }}>
                     <SidenavItem 
                         name={name} 
-                        active={key === itemName} 
+                        // active={key === itemName} 
+                        active={!!matchPath({ path: route, end: true }, pathname)} 
                     />
                 </NavLink>
             );
@@ -239,14 +251,16 @@ function Sidenav({ color = "info", brand = "", brandName, routes, ...rest }) {
                 }
                 else {
                     //Sidebar route - Have Child
+                    const childActive = isAnyChildActive(collapse);
+                    
                     returnValue = (
                         <SidenavCollapse
                             key={key}
                             name={name}
                             icon={icon}
-                            active={key === collapseName}
+                            active={childActive}
                             // active = {true}
-                            open={openCollapse === key}
+                            open={openCollapse === key || childActive}
                             onClick={() => (openCollapse === key ? setOpenCollapse(false) : setOpenCollapse(key))}
                         >
                             {collapse ? renderCollapse(collapse) : null}

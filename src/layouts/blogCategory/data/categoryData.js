@@ -44,6 +44,13 @@ const categoryData = {
         description:
         "Learn how malicious software is designed to evade detection, exploit systems, and maintain persistence.",
     },
+    "test": {
+        id: "test",
+        title: "Test",
+        image: imageIRAssigmnet,
+        description:
+        "Test",
+    },
 };
 
 export default categoryData;

@@ -11,3 +11,5 @@ export default function NotFoundRedirect() {
   // Các path khác → redirect về /categories
   return <Navigate to="/categories" replace />;
 }
+
+

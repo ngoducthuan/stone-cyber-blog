@@ -48,111 +48,127 @@ import PropTypes from "prop-types";
 import { useTheme } from "@emotion/react";
 
 function Header({ title, image, description }) {
-  const [tabsOrientation, setTabsOrientation] = useState("horizontal");
-  const [tabValue, setTabValue] = useState(0);
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
+    const [tabsOrientation, setTabsOrientation] = useState("horizontal");
+    const [tabValue, setTabValue] = useState(0);
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+    
+    const base = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
 
-  useEffect(() => {
-    // A function that sets the orientation state of the tabs.
-    function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.sm
-        ? setTabsOrientation("vertical")
-        : setTabsOrientation("horizontal");
-    }
+    // image có thể là:
+    // - string: "/images/xxx.png" (public)
+    // - string: "https://..." (remote)
+    // - module object: import img from "assets/..." (có thể có .default)
+    const resolvedImage =
+        !image
+        ? ""
+        : typeof image === "string"
+            ? (image.startsWith("/") ? base + image : image)
+            : (image.default || image);
 
-    /** 
-     The event listener that's calling the handleTabsOrientation function when resizing the window.
-    */
-    window.addEventListener("resize", handleTabsOrientation);
+    useEffect(() => {
+        // A function that sets the orientation state of the tabs.
+        function handleTabsOrientation() {
+        return window.innerWidth < breakpoints.values.sm
+            ? setTabsOrientation("vertical")
+            : setTabsOrientation("horizontal");
+        }
 
-    // Call the handleTabsOrientation function to set the state with the initial value.
-    handleTabsOrientation();
+        /** 
+         The event listener that's calling the handleTabsOrientation function when resizing the window.
+        */
+        window.addEventListener("resize", handleTabsOrientation);
 
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleTabsOrientation);
-  }, [tabsOrientation]);
+        // Call the handleTabsOrientation function to set the state with the initial value.
+        handleTabsOrientation();
 
-  const handleSetTabValue = (event, newValue) => setTabValue(newValue);
+        // Remove event listener on cleanup
+        return () => window.removeEventListener("resize", handleTabsOrientation);
+    }, [tabsOrientation]);
 
-  return (
-    <SoftBox position="relative" >
-        {/* Light mode */}
-        {/* <DashboardNavbar absolute light /> */}
-        {/* Dark mode */}
-        <DashboardNavbar absolute {...(isDark ? {dark: true} : {light: true})} /> 
+    const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
-        <SoftBox
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            minHeight="20rem"
-            mt={2}
-            pt={{ xs: 10, md: 2 }}
-            borderRadius="xl"
-            
-            // overflow="hidden"
-            sx={{
-                boxShadow: "0 15px 20px -10px rgba(0,0,0,.55)",
-            // Nâng lớp + hairline giống card
-                // boxShadow:
-                // "inset 0 0 0 1px rgba(255,255,255,.12), 0 12px 32px rgba(0,0,0,.35)",
-                 backgroundImage: `
-                    linear-gradient(180deg, rgba(0,0,0,.40) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.75) 95%),
-                    url(${image})
-                `,
+    return (
+        <SoftBox position="relative" >
+            {/* Light mode */}
+            {/* <DashboardNavbar absolute light /> */}
+            {/* Dark mode */}
+            <DashboardNavbar absolute {...(isDark ? {dark: true} : {light: true})} /> 
+
+            <SoftBox
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                minHeight="20rem"
+                mt={2}
+                pt={{ xs: 10, md: 2 }}
+                borderRadius="xl"
                 
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                // filter: "drop-shadow(0 12px 28px rgba(0,0,0,.5))",   // bóng ngoài
-                
-                // Overlay tách chữ khỏi ảnh (đặt bằng pseudo thay vì lồng vào background)
-                // "&::after": {
-                // content: '""',
-                // position: "absolute",
-                // inset: 0,
-                // // background: "linear-gradient(180deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.75) 95%)", 
-                // },
-            }}
-        >
-            <SoftTypography 
-                variant="h2" 
-                zIndex={1}
-                // color="dark"
-                color={isDark ? "dark" : "white"}
-                fontWeight="bold" 
-                mb={1}
-                sx={{ 
-                    textShadow: "2px 2px 6px rgba(0,0,0,0.6)",
-                    fontFamily: "Signika, sans-serif",
-                }}
-            >
-                {/* All Categories */}
-                {title}
-            </SoftTypography>
-            <SoftTypography 
-                variant="h6" 
-                // color="white" //light mode
-                color={isDark ? "dark" : "white"}
-                fontWeight="regular"
-                zIndex={1}
+                // overflow="hidden"
                 sx={{
-                    px: { xs: 2, sm: 3, md: 4 },  
-                    py: 1,                           
-                    maxWidth: { xs: "100%", sm: "90%", md: "80%" }, 
-                    textAlign: "center", 
-                    textShadow: "2px 2px 6px rgba(0,0,0,0.6)",
-                    fontFamily: "Heebo, sans-serif",
+                    boxShadow: "0 15px 20px -10px rgba(0,0,0,.55)",
+                // Nâng lớp + hairline giống card
+                    // boxShadow:
+                    // "inset 0 0 0 1px rgba(255,255,255,.12), 0 12px 32px rgba(0,0,0,.35)",
+                    backgroundImage: resolvedImage
+                    ? `
+                        linear-gradient(180deg, rgba(0,0,0,.40) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.75) 95%),
+                        url(${resolvedImage})
+                    `
+                    : `linear-gradient(180deg, rgba(0,0,0,.40) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.75) 95%)`,
+
+                    
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    // filter: "drop-shadow(0 12px 28px rgba(0,0,0,.5))",   // bóng ngoài
+                    
+                    // Overlay tách chữ khỏi ảnh (đặt bằng pseudo thay vì lồng vào background)
+                    // "&::after": {
+                    // content: '""',
+                    // position: "absolute",
+                    // inset: 0,
+                    // // background: "linear-gradient(180deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.75) 95%)", 
+                    // },
                 }}
             >
-                {/* Explore all categories and discover content tailored to your interests. */}
-                {description}
-            </SoftTypography>
+                <SoftTypography 
+                    variant="h2" 
+                    zIndex={1}
+                    // color="dark"
+                    color={isDark ? "dark" : "white"}
+                    fontWeight="bold" 
+                    mb={1}
+                    sx={{ 
+                        textShadow: "2px 2px 6px rgba(0,0,0,0.6)",
+                        fontFamily: "Signika, sans-serif",
+                    }}
+                >
+                    {/* All Categories */}
+                    {title}
+                </SoftTypography>
+                <SoftTypography 
+                    variant="h6" 
+                    // color="white" //light mode
+                    color={isDark ? "dark" : "white"}
+                    fontWeight="regular"
+                    zIndex={1}
+                    sx={{
+                        px: { xs: 2, sm: 3, md: 4 },  
+                        py: 1,                           
+                        maxWidth: { xs: "100%", sm: "90%", md: "80%" }, 
+                        textAlign: "center", 
+                        textShadow: "2px 2px 6px rgba(0,0,0,0.6)",
+                        fontFamily: "Heebo, sans-serif",
+                    }}
+                >
+                    {/* Explore all categories and discover content tailored to your interests. */}
+                    {description}
+                </SoftTypography>
+            </SoftBox>
         </SoftBox>
-    </SoftBox>
-  );
+    );
 }
 
 Header.propTypes = {

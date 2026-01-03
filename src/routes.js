@@ -4,12 +4,14 @@ import SignUpIllustration from "layouts/authentication/sign-up/illustration";
 import ResetPasswordIllustration from "layouts/authentication/reset-password/illustration";
 import Error404 from "layouts/authentication/error/404";
 import Error500 from "layouts/authentication/error/500";
+import BlogIndex from "layouts/blog"
 
 import StaticDynamicMalware from "layouts/blog/blogDetails/malware/StaticDynamicMalware";
 import GhidraIntroduction   from "layouts/blog/blogDetails/malware/GhidraIntroduction";
 import { Assignment1, Assignment2, Assignment3 } from "layouts/blog/blogDetails/assignment";
 
-// import Default from "layouts/dashboards/default";
+import { blogMap } from "routes/blogMap";
+import { buildSidenavRoutesFromBlogMap } from "routes/blog.builders";
 
 // Soft UI Dashboard PRO React icons
 import Document from "examples/Icons/Document";
@@ -29,6 +31,9 @@ import { CategoryDetails, BlogCategories } from "layouts/blogCategory";
 import { components } from "react-select";
 import { Assessment } from "@mui/icons-material";
 
+//Map content from routes/blogMap.js
+const blogRoutes = buildSidenavRoutesFromBlogMap(blogMap);
+
 //Routes
 const routes = [
     { type: "title", title: "Tools", key: "title-pages" },
@@ -37,32 +42,10 @@ const routes = [
         name: "Search",
         key: "search",
         icon: <Search size="12px"/>,
-        // route: "/",
-        // component: <BlogCategories/>,
         noCollapse: true,
     },
     
     { type: "title", title: "Topics", key: "title-pages" },
-    // {
-    //     type: "collapse",
-    //     name: "Logs",
-    //     key: "logs",
-    //     icon: <SettingsIcon size="12px" />,
-    //     collapse: [
-    //         {
-    //             name: "Security Logs",
-    //             key: "security-logs",
-    //             route: "/logs/security-logs",
-    //             // component: <Kanban />,
-    //         },
-    //         {
-    //             name: "Wizard",
-    //             key: "powershell-logs",
-    //             route: "/logs/powershell-logs",
-    //             // component: <Wizard />,
-    //         },
-    //     ],
-    // },
 
     {
         type: "collapse",
@@ -114,41 +97,7 @@ const routes = [
         ],
         // noCollapse: true,
     },
-    // {
-    //     type: "collapse",
-    //     name: "Logs Analysis",
-    //     key: "logs-analysis",
-    //     icon: <LogAnalysis size="12px"/>,
-    //     route: "/category/logs-analysis",
-    //     component: <CategoryDetails/>,
-    //     collapse: [
-    //         {
-    //             name: "Security Log",
-    //             key: "security-log",
-    //             route: "/malware-analysis/1",
-    //             component: <StaticDynamicMalware/>,
-    //         },
-    //         {
-    //             name: "Powershell Log",
-    //             key: "powershell-log",
-    //             route: "/malware-analysis/2",
-    //             component: <StaticDynamicMalware/>,
-    //         },
-    //         {
-    //             name: "Sysmon Log",
-    //             key: "sysmon-log",
-    //             route: "/malware-analysis/1",
-    //             component: <StaticDynamicMalware/>,
-    //         },
-    //         {
-    //             name: "Powershell Log",
-    //             key: "powershell-log",
-    //             route: "/malware-analysis/2",
-    //             component: <StaticDynamicMalware/>,
-    //         },
-    //     ],
-    //     noCollapse: true,
-    // },
+
     {
         type: "collapse",
         name: "Malware Dev",
@@ -164,7 +113,7 @@ const routes = [
         key: "assignment",
         icon: <Assignment size="12px"/>,
         route: "/category/assignment",
-        components: <CategoryDetails/>,
+        component: <CategoryDetails/>,
         collapse: [
             {
                 name: "Assignment 1",
@@ -186,7 +135,9 @@ const routes = [
             },
         ],
         // noCollapse: true,
-    }
+    },
+
+    ...blogRoutes,
 ]
 
 export default routes;
